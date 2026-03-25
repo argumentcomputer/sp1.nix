@@ -33,5 +33,7 @@ jobs:
           sed -i 's|url = "github:argumentcomputer/sp1.nix"|url = "path:../.."|' flake.nix
           nix flake update sp1 --accept-flake-config
         working-directory: ${{ github.workspace }}/templates/hello-world
-      - run: nix develop --accept-flake-config --command bash -c "cargo prove --version"
+      - run: nix develop --accept-flake-config --command bash -c "cd script && cargo run --release -- --prove"
         working-directory: ${{ github.workspace }}/templates/hello-world
+        env:
+          RUST_LOG: info
