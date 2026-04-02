@@ -14,11 +14,12 @@ Then enter a dev shell and run the proof:
 
 ```
 cd my-project
-nix develop
+nix develop # or direnv allow
 cd script && cargo run --release -- --prove
 ```
 
-See the [template README](templates/hello-world/README.md) for more details on running proofs.
+See the [template README](templates/hello-world-async/README.md) for more
+details on running proofs.
 
 ## Packages
 
@@ -31,12 +32,12 @@ nix build .#sp1-home
 nix build .#rustup-shim
 ```
 
-| Package | Description |
-|---------|-------------|
-| `cargo-prove` | SP1 CLI (`cargo prove`) |
-| `succinct-rust` | Succinct's patched Rust toolchain |
-| `sp1-home` | Composed `~/.sp1` home directory |
-| `rustup-shim` | Shim that routes `rustc` to `succinct-rust` when `RUSTUP_TOOLCHAIN=succinct` |
+| Package         | Description                                                                  |
+| --------------- | ---------------------------------------------------------------------------- |
+| `cargo-prove`   | SP1 CLI (`cargo prove`)                                                      |
+| `succinct-rust` | Succinct's patched Rust toolchain                                            |
+| `sp1-home`      | `~/.sp1` home directory                                                      |
+| `rustup-shim`   | Shim that routes `rustc` to `succinct-rust` when `RUSTUP_TOOLCHAIN=succinct` |
 
 ## Dev Shell
 

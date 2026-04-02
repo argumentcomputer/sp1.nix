@@ -65,7 +65,12 @@
           inputsFrom = [sp1.devShells.${system}.default];
           packages = [
             rustToolchain
+            pkgs.protobuf
+            pkgs.go
+            pkgs.llvmPackages.libclang.lib
           ];
+          LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
+          BINDGEN_EXTRA_CLANG_ARGS = "-isystem ${pkgs.llvmPackages.libclang.lib}/lib/clang/${pkgs.llvmPackages.libclang.version}/include -isystem ${pkgs.glibc.dev}/include";
         };
       };
     };

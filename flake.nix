@@ -58,8 +58,10 @@
             cargo-prove
           ];
           shellHook = ''
-            if [ ! -e "$HOME/.sp1" ]; then
+            if [ ! -e "$HOME/.sp1" ] && [ ! -L "$HOME/.sp1" ]; then
               ln -s ${sp1-home} "$HOME/.sp1"
+            elif [ -L "$HOME/.sp1" ]; then
+              ln -snf ${sp1-home} "$HOME/.sp1"
             elif [ ! -L "$HOME/.sp1" ]; then
               echo "Warning: $HOME/.sp1 exists and is not a symlink. SP1 toolchain may not work correctly."
             fi

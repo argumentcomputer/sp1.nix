@@ -1,0 +1,5 @@
+builds:
+  exclude:
+    - "packages.*.build-image"
+    - "packages.*.run-sp1"
+    - "packages.*.sp1-shell"
