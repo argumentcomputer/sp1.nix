@@ -39,6 +39,9 @@ jobs:
           sed -i 's|url = "github:argumentcomputer/sp1.nix"|url = "path:../.."|' flake.nix
           nix flake update sp1 --accept-flake-config
         working-directory: ${{ github.workspace }}/templates/${{ matrix.template }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: templates/${{ matrix.template }}
       - run: nix develop --accept-flake-config --command bash -c "cd script && cargo run --release -- --prove"
         working-directory: ${{ github.workspace }}/templates/${{ matrix.template }}
         env:
