@@ -23,8 +23,14 @@ jobs:
       - run: nix build .#rustup-shim -L --accept-flake-config
 
   test:
-    name: Test template dev shell
+    name: Test ${{ matrix.template }} template
     runs-on: warp-ubuntu-latest-x64-16x
+    strategy:
+      fail-fast: false
+      matrix:
+        template:
+          - hello-world-async
+          - hello-world-blocking
     steps:
       - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v31
@@ -32,8 +38,11 @@ jobs:
         run: |
           sed -i 's|url = "github:argumentcomputer/sp1.nix"|url = "path:../.."|' flake.nix
           nix flake update sp1 --accept-flake-config
-        working-directory: ${{ github.workspace }}/templates/hello-world
+        working-directory: ${{ github.workspace }}/templates/${{ matrix.template }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: templates/${{ matrix.template }}
       - run: nix develop --accept-flake-config --command bash -c "cd script && cargo run --release -- --prove"
-        working-directory: ${{ github.workspace }}/templates/hello-world
+        working-directory: ${{ github.workspace }}/templates/${{ matrix.template }}
         env:
           RUST_LOG: info
