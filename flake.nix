@@ -54,6 +54,7 @@
           sp1-shell = pkgs.callPackage ./docker/sp1-shell.nix {};
         };
         devShells.default = pkgs.mkShell {
+          name = "sp1";
           packages = [
             cargo-prove
           ];
