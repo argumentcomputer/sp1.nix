@@ -10,18 +10,31 @@
 }:
 rustPlatform.buildRustPackage rec {
   pname = "cargo-prove";
-  version = "6.0.2";
+  version = "6.2.0";
 
   src = fetchFromGitHub {
     owner = "succinctlabs";
     repo = "sp1";
     rev = "v${version}";
-    hash = "sha256-DJ3/BlGJX9eLsBPMsmKtnoJYF9vgkxKn32dybQVggxA=";
+    hash = "sha256-0f8aHrrsMVml+prEK5jXrjYSkVgE17KD0pBeeV3d7O8=";
   };
 
-  cargoHash = "sha256-6MCx5a6vydi34YvWgN+8Sj69FCZugHabQGXowv+550g=";
+  cargoHash = "sha256-M6lKVu4Vx6jo++6pU3V9Jm+1yanWHOj4tdXyQRbxrBA=";
 
   buildAndTestSubdir = "crates/cli";
+
+  # The runner crate's build script spawns a nested `cargo build` to produce a
+  # helper binary it then embeds. Under `buildRustPackage` the outer build sets
+  # `--target <host-triple>`, which the nested invocation inherits via
+  # `CARGO_BUILD_TARGET`. That places the binary under
+  # `target/<triple>/release/` while the script looks for it at
+  # `target/release/`. Clear the env vars in the nested invocation so the path
+  # matches.
+  postPatch = ''
+    substituteInPlace crates/core/runner/build.rs \
+      --replace-fail 'cmd.env_remove("RUSTFLAGS");' \
+        'cmd.env_remove("RUSTFLAGS"); cmd.env_remove("CARGO_BUILD_TARGET"); cmd.env_remove("CARGO_BUILD_TARGET_DIR");'
+  '';
 
   # Tests require network access which is not available in sandboxed Nix builds.
   doCheck = false;
